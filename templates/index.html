@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConvoGenius</title>
+    <link rel="icon" href="https://static-00.iconduck.com/assets.00/atom-symbol-emoji-1024x1024-cqr6dj9q.png" type="image/png" sizes="25x25" style="border-radius: 20px;">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: none;
+            justify-content: space-between;
+            background-color:#fffdfd;
+            background: #272626;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0;
+            overflow: none;
+            /* box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.1); */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color:#2b2929;
+            color: #ffffff;
+            border-radius: 10px;
+            font-family: emoji;
+            overflow: hidden;
+            height: 10px;
+        }
+
+        .logo {
+            max-height: 40px;
+            margin-right: 50px;
+        }
+
+        .menu-icon {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .menu-links {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            overflow: hidden;
+            
+        }
+
+        .header-link {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bold;
+            margin-left: 20px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            overflow: hidden;
+        }
+
+        .header-link:hover {
+            text-decoration: underline;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            border: 0px solid #272626;
+            padding:15px;
+            margin-bottom: 110px;
+            max-width: auto;
+            margin: auto;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            
+        }
+
+        .user-message{
+            padding: 15px;
+            margin-bottom: 0px;
+            border-radius: 10px;
+            word-wrap: break-word;
+            position: relative;;
+            user-select: none; /* Standard syntax */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            -webkit-user-select: none; /* Safari */
+        }
+
+        .ai-message {
+            padding: 10px;
+            margin-bottom: 60px;
+            border-radius: 10px;
+            word-wrap: break-word;
+            position: relative; /* Add position relative for positioning the copy icon */
+            
+        }
+
+        .user-message {
+            background-color: #64b7a3;
+        }
+
+        .ai-message {
+            background-color: #272626;
+        }
+
+        .copy-icon-message {
+            display: inline-block;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            cursor: pointer;
+            color: #3498db;
+            font-size: 15px;
+        }
+
+        #userInputContainer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #ff000000;
+            box-shadow: 0px -5px 10px rgba(12, 12, 12, 0);
+            padding: 25px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            z-index: 999;
+        }
+
+        #userInput {
+            width: calc(70% - 20px);
+            padding: 17px;
+            box-sizing: border-box;
+            font-size: 18px;
+            border: 2px solid #2f2e2e;
+            border-radius: 50px;
+            outline: none;
+            margin-right: 10px;
+            background-color: #2f2e2e;
+            color: #fff; 
+        }
+
+        #loadingButton {
+            background-color: #04aa6d00;
+            border: none;
+            color: rgba(0, 0, 0, 0.614);
+            padding: 12px 24px;
+            font-size: 16px;
+            display: none;
+        }
+
+        #sendButtonContainer {
+            width: 40px;
+            height: 40px;
+            background-color: #0761fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: opx;
+        }
+
+        #sendButtonContainer:hover {
+            background-color: #006ff6;
+        }
+
+        #refreshButton {
+            background-color: #db3434;
+            color: #fff;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 20px;
+            
+        }
+
+        #refreshButton:hover {
+            background-color: #2980b9;
+        }
+
+        /* Copyright Footer Style */
+        #copyrightFooter {
+            text-align: center;
+            padding: 0px;
+            background-color: #ffffff00;
+            color: #ffffffcc;
+            position: fixed;
+            bottom: 5px;
+            width: 100%;
+            font-size: 10px;
+            margin-top: 10px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .menu-icon {
+                display: block;
+                overflow: hidden;
+            }
+
+            .menu-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: rgb(3, 79, 150);
+                text-align: center;
+                overflow: hidden;
+                
+            }
+
+            .menu-links a {
+                margin: 10px 0;
+                overflow: hidden;
+            }
+
+            .menu-links.show {
+                display: flex;
+                overflow: hidden;
+            }
+
+
+            .share-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf4f00;
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+        }}
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <span style="font-family: Arial, sans-serif; font-size: 25px; color: #ffffff; font-weight: bold; margin-left: 2px;">
+                <a href="https://intelligent-robotic-interactive-system.onrender.com/">⚛️</a> 
+                <a href="https://intelligent-robotic-interactive-system.onrender.com/">ConvoGenius</a>
+            </span>
+        </div>
+        
+        <!-- Hamburger Menu Icon -->
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+        <!-- Header Links -->
+        <div class="menu-links">
+            <a href="https://mustafaansarii.web.app/" class="header-link">More</a>
+            <a href="https://mustafaansarii.web.app/" class="header-link">Projects</a>
+            <a href="https://mustafaansarii.web.app/" class="header-link">Contacts</a>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="conversation"></div>
+
+    <!-- User Input Section with Loading Button -->
+    <div id="userInputContainer">
+        <input type="text" id="userInput" placeholder="Type here..." onkeydown="handleKeyDown(event)">
+        <!-- Loading button initially hidden -->
+        <button id="loadingButton" style="display: none;">
+            <p style="color:rgb(255, 255, 255);"><i class="fa fa-spinner fa-spin"></i></p> 
+            <p style="color:rgb(255, 255, 255);">Responding</p>
+        </button>
+        <!-- Send button replaced with icon container -->
+        <div id="sendButtonContainer" onclick="sendMessage()">
+            <i class="material-icons">send</i>
+        </div>
+        <!-- Refresh button in red round shape -->
+        <div id="refreshButton" onclick="clearConversation()">
+            <i class="fa fa-refresh"></i>
+        </div>
+    </div>
+
+    <!-- Copyright Footer -->
+    <div id="copyrightFooter">
+        It can make mistakes. Consider checking important information
+    </div>
+
+    <script>
+        let conversationHistory = "";
+
+        function appendToConversation(user, text) {
+            const chatContainer = document.getElementById('conversation');
+            const messageElement = document.createElement('p');
+            messageElement.className = user === 'You' ? 'user-message' : 'ai-message';
+
+            // Add a copy icon within each response
+            const copyIcon = `<span class="copy-icon-message" onclick="copyConversation(this)">&#x1F4C4;</span>`;
+
+            messageElement.innerHTML = `<strong>${user}</strong> ${formatText(text)}${copyIcon}`;
+            chatContainer.appendChild(messageElement);
+
+            // Scroll to the bottom for better visibility of the latest messages
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function formatText(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (!userInput) return;
+
+            // Show loading button, hide send button
+            document.getElementById('loadingButton').style.display = 'block';
+            document.getElementById('sendButtonContainer').style.display = 'none';
+
+            fetch('/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    input: userInput,
+                    history: conversationHistory
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading button, show send button
+                document.getElementById('loadingButton').style.display = 'none';
+                document.getElementById('sendButtonContainer').style.display = 'flex';
+
+                appendToConversation('You <br>', userInput);
+                appendToConversation(' <img src="https://media3.giphy.com/media/3oFzlVJAzNUDwvpcc0/giphy.gif?cid=ecf05e47a3zr9vyiuf7nng3xlspgg6o2zajufsfjyf0sxtv8&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Girl in a jacket" width="26" height="26" style="border-radius: 20px" >ConvoGenius<br>', data.response);
+                
+                conversationHistory = data.history;
+            })
+            .catch(error => {
+                // Hide loading button, show send button on error
+                document.getElementById('loadingButton').style.display = 'none';
+                document.getElementById('sendButtonContainer').style.display = 'flex';
+                console.error('Error:', error);
+            });
+
+            document.getElementById('userInput').value = '';
+        }
+
+        function clearConversation() {
+            fetch('/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    input: 'clear',
+                    history: conversationHistory
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('conversation').innerHTML = '';
+                conversationHistory = data.history;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+
+        function toggleMenu() {
+            const menuLinks = document.querySelector('.menu-links');
+            menuLinks.classList.toggle('show');
+        }
+
+        function copyConversation(icon) {
+            const textToCopy = icon.parentElement.innerText.trim();
+
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            alert('Response copied!');
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+</body>
+</html>
