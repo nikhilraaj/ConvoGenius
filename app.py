@@ -3,6 +3,7 @@ import textwrap
 import google.generativeai as genai
 import os
 
+
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 def configure_generative_ai(api_key):
